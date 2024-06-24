@@ -1,26 +1,22 @@
 #include<stdio.h>
 #include<SDL2/SDL.h>
 #include"constants.h"
+#include<time.h>
 
 int game_is_running = FALSE;
 
 SDL_Window* Window = NULL;
 SDL_Renderer* Renderer = NULL;
 
-int last_frame_time = 0;
 
-int move_x = 1;
-int move_y = 1;
+int move_x = 0;
+int move_y = 0;
 
-typedef struct
-{   
-    float x;
-    float y;
-    float width;
-    float height;
-}Snake_body;
-
-Snake_body Snake;
+Objects Snake;
+Objects Limits[4] = { {.x = 160, .y = 80, .width = 840, .height = -20} ,
+                        {.x = 980, .y = 80, .width = 20, .height = 820} ,
+                        {.x = 980, .y = 880, .width = -820, .height = 20} ,
+                        {.x = 180, .y = 880, .width = -20, .height = -800} };
 
 int  Init_Window(void)
 {
@@ -73,53 +69,64 @@ void process_input()
 
                 case SDLK_UP:
                     move_y = -1;
+                    move_x = 0;
                     break;
                 
                 case SDLK_DOWN:
                     move_y = 1;
+                    move_x = 0;
                     break;
                 
                 case SDLK_RIGHT:
                     move_x = 1;
+                    move_y = 0;
                     break;
                 
                 case SDLK_LEFT:
                     move_x = -1;
+                    move_y = 0;
                     break;
 
                 default:
                     
             }
-
-            
-    }
-    
+    }   
 }
 void update()
 {
+    static int last_frame_time = 0;
+
     float delta_time = ( SDL_GetTicks() - last_frame_time) / 1000.0f;
-    
+
     last_frame_time = SDL_GetTicks();
 
-    Snake.x += move_x * 40 * delta_time; 
-    Snake.y += move_y * 20 * delta_time;
+    Snake.x += move_x * SNAKE_SPEED * delta_time; //80 pixels/sec
+    Snake.y += move_y * SNAKE_SPEED * delta_time;
 }
 void setup()
-{
-    Snake.x = 100;
-    Snake.y = 100;
+{   
+    Snake.x = 400;
+    Snake.y = 400;
     Snake.width = 20;
     Snake.height = 20;
+    
 }
 void render()
 {
+    //Window Color
     SDL_SetRenderDrawColor( Renderer, 0 , 0 , 0 , 255);
     SDL_RenderClear(Renderer);
 
-    //Drawing
+    //Drawing Limits
+    for(int i = 0; i < 4; i++)
+   {
+        SDL_Rect Limits_Rect = {Limits[i].x, Limits[i].y, Limits[i].width, Limits[i].height};
+        SDL_SetRenderDrawColor( Renderer, 255 , 0 , 0 , 255);
+        SDL_RenderFillRect(Renderer, &Limits_Rect);
+   }
 
+    //Drawing Snake
     SDL_Rect Snake_Body ={ Snake.x , Snake.y , Snake.width , Snake.height };
-    
     SDL_SetRenderDrawColor(Renderer, 255 , 255 , 255 , 255 ); //white
     SDL_RenderFillRect( Renderer , &Snake_Body);
 

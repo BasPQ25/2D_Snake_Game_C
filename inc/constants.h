@@ -4,4 +4,12 @@
 #define WIDTH 1200  
 #define LENGTH 1000
 
-#define FPS 30
+#define SNAKE_SPEED 200
+
+typedef struct
+{   
+    float x;
+    float y;
+    float width;
+    float height;  
+}Objects;
