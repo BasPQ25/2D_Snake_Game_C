@@ -1,4 +1,5 @@
 # Snake Game Personal Project
 ## TODO List: 
-### __[random round yellow coins generation]
+### *random yellow coins generation*
+### *linked list tail implementation*
         
