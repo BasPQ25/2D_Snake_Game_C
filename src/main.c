@@ -11,6 +11,7 @@ SDL_Renderer* Renderer = NULL;
 
 
 //local variables
+float last_frame_time_coins = 0;
 
 //Snake moving direction
 int move_x = 0;
@@ -26,6 +27,7 @@ int Stop_generating_Coins = FALSE;
 
 //extern Variables
 extern Coordinates Coord_Array[MAXIMUM_GENERATING_COINS];
+extern int NumberOfCoinsSpawned;
 
 int  Init_Window(void)
 {
@@ -111,6 +113,7 @@ void update()
 
     Snake.x += move_x * SNAKE_SPEED * delta_time; //80 pixels/sec
     Snake.y += move_y * SNAKE_SPEED * delta_time;
+
 }
 void setup()
 {   
@@ -139,12 +142,23 @@ void render()
     SDL_SetRenderDrawColor(Renderer, 255 , 255 , 255 , 255 ); //white
     SDL_RenderFillRect( Renderer , &Snake_Body);
 
-    //Spawning random Coins;
+    //Generating Coins Coordinates;
+    float delta_time_coins = ( SDL_GetTicks() - last_frame_time_coins) / 1000.0f;
+
+    if(delta_time_coins >= TIME_PASSED_TO_SPAWN_COIN) 
+    {
+        GenerateRandomCoordinates(LOWER_BORDER_X, HIGHER_BORDER_X , LOWER_BORDER_Y ,  HIGHER_BORDER_Y);
+
+        last_frame_time_coins = SDL_GetTicks();
+    }
+
+    //Spawning random Coins
+    for(int i = 0; i < NumberOfCoinsSpawned ; i++)
+    {
         SDL_SetRenderDrawColor(Renderer, 255 , 255 , 0 , 255 ); //yellow
-        if(Coord_Array[MAXIMUM_GENERATING_COINS-1].coord_x == NULL &&  Coord_Array[MAXIMUM_GENERATING_COINS-1].coord_y == NULL)
-        {
-            SpawnRandomCoins(LOWER_BORDER_X, HIGHER_BORDER_X, LOWER_BORDER_Y, HIGHER_BORDER_Y);
-        }
+        DrawCoins(Renderer, *Coord_Array[i].coord_x, *Coord_Array[i].coord_y , COINS_RADIUS);
+    }
+
     //Present on Window
     SDL_RenderPresent(Renderer);
 }
