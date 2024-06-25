@@ -6,6 +6,14 @@
 
 #define SNAKE_SPEED 200
 
+#define LOWER_BORDER_X 200
+#define HIGHER_BORDER_X 960
+
+#define LOWER_BORDER_Y  100
+#define HIGHER_BORDER_Y 860
+
+
+
 typedef struct
 {   
     float x;
@@ -13,3 +21,4 @@ typedef struct
     float width;
     float height;  
 }Objects;
+

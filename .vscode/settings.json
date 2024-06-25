@@ -1,0 +1,12 @@
+{
+    "typescript.preferGoToSourceDefinition": true,
+    "notebook.gotoSymbols.showAllSymbols": false,
+    "editor.gotoLocation.multipleTypeDefinitions": "goto",
+    "files.associations": {
+        "sdl.h": "c",
+        "constants.h": "c",
+        "random": "c",
+        "coins.h": "c",
+        "time.h": "c"
+    }
+}

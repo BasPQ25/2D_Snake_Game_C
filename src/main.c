@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<SDL2/SDL.h>
 #include"constants.h"
+#include"coins.h"
 #include<time.h>
 
 int game_is_running = FALSE;
@@ -9,14 +10,22 @@ SDL_Window* Window = NULL;
 SDL_Renderer* Renderer = NULL;
 
 
+//local variables
+
+//Snake moving direction
 int move_x = 0;
 int move_y = 0;
-
+//Objects
 Objects Snake;
 Objects Limits[4] = { {.x = 160, .y = 80, .width = 840, .height = -20} ,
                         {.x = 980, .y = 80, .width = 20, .height = 820} ,
                         {.x = 980, .y = 880, .width = -820, .height = 20} ,
                         {.x = 180, .y = 880, .width = -20, .height = -800} };
+//Flags for Switching the game state
+int Stop_generating_Coins = FALSE;
+
+//extern Variables
+extern Coordinates Coord_Array[MAXIMUM_GENERATING_COINS];
 
 int  Init_Window(void)
 {
@@ -121,7 +130,7 @@ void render()
     for(int i = 0; i < 4; i++)
    {
         SDL_Rect Limits_Rect = {Limits[i].x, Limits[i].y, Limits[i].width, Limits[i].height};
-        SDL_SetRenderDrawColor( Renderer, 255 , 0 , 0 , 255);
+        SDL_SetRenderDrawColor( Renderer, 255 , 0 , 0 , 255); //red
         SDL_RenderFillRect(Renderer, &Limits_Rect);
    }
 
@@ -130,11 +139,21 @@ void render()
     SDL_SetRenderDrawColor(Renderer, 255 , 255 , 255 , 255 ); //white
     SDL_RenderFillRect( Renderer , &Snake_Body);
 
+    //Spawning random Coins;
+        SDL_SetRenderDrawColor(Renderer, 255 , 255 , 0 , 255 ); //yellow
+        if(Coord_Array[MAXIMUM_GENERATING_COINS-1].coord_x == NULL &&  Coord_Array[MAXIMUM_GENERATING_COINS-1].coord_y == NULL)
+        {
+            SpawnRandomCoins(LOWER_BORDER_X, HIGHER_BORDER_X, LOWER_BORDER_Y, HIGHER_BORDER_Y);
+        }
+    //Present on Window
     SDL_RenderPresent(Renderer);
 }
 
 int main()
 {
+    //initializa all the coins coordinates at 0;
+    void Initialize_Coord_array();
+
     game_is_running = Init_Window();
 
     setup();
