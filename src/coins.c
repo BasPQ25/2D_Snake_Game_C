@@ -28,8 +28,6 @@ void DrawCoins(SDL_Renderer* renderer, int centerX, int centerY, int radius) {
 
 int GenerateRandomNumbers(int Lower_Border, int Higher_Border)
 {
-    srand(time(NULL));
-
     int randomNumber;
     randomNumber = Lower_Border + rand() % (Higher_Border - Lower_Border + 1);
 

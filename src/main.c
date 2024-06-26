@@ -168,6 +168,9 @@ int main()
     //initializa all the coins coordinates at 0;
     void Initialize_Coord_array();
 
+    //initialize start timer for random numbers generations
+    srand(time(NULL));
+
     game_is_running = Init_Window();
 
     setup();
