@@ -30,6 +30,7 @@ int Stop_generating_Coins = FALSE;
 extern Coordinates* Coord_Array[MAXIMUM_GENERATING_COINS];
 extern int NumberOfCoinsSpawned;
 extern Coordinates Snake_body[MAXIMUM_GENERATING_COINS];
+extern int NumberOfTails;
 
 int  Init_Window(void)
 {
@@ -110,14 +111,18 @@ void update()
     //Moving direction and Snake Speeds
     static int last_frame_time = 0;
 
-    float delta_time = ( SDL_GetTicks() - last_frame_time) / 1000.0f;
-
-    last_frame_time = SDL_GetTicks();
-
-    Snake.x += move_x * SNAKE_SPEED * delta_time; //80 pixels/sec
-    Snake.y += move_y * SNAKE_SPEED * delta_time;
+    int delta_time = ( SDL_GetTicks() - last_frame_time);
+    if(delta_time > SNAKE_SPEED) //miliseconds
+    {
+        last_frame_time = SDL_GetTicks();
     
-    Update_Snake_Head_Pozition(Snake.x, Snake.y);
+        Update_Snake_Tails();
+
+        Snake.x += move_x * SNAKE_DISTANGE_TRAVELED; //20 pixels/ms
+        Snake.y += move_y * SNAKE_DISTANGE_TRAVELED;
+    
+        Update_Snake_Head_Pozition(Snake.x, Snake.y);
+    }
 
 }
 void setup()
@@ -148,6 +153,15 @@ void render()
     SDL_SetRenderDrawColor(Renderer, 255 , 255 , 255 , 255 ); //white
     SDL_RenderFillRect( Renderer , &Snake_Body);
 
+    //Draw Snake Tails
+    SDL_Rect Snake_Tails ={ Snake.x , Snake.y , Snake.width , Snake.height};
+    for(int i = 0; i < NumberOfTails; i++)
+    {
+      Snake_Tails.x = Snake_body[i+1].coord_x;  
+      Snake_Tails.y = Snake_body[i+1].coord_y;
+      SDL_RenderFillRect( Renderer , &Snake_Tails);
+    }
+
     //Generating Coins Coordinates;
     float delta_time_coins = ( SDL_GetTicks() - last_frame_time_coins) / 1000.0f;
 
@@ -169,7 +183,7 @@ void render()
 
     //Game Logic
     
-    Eat_Coins_And_Grow_Tail(Snake_Body);
+    Eat_Coins(Snake_Body);
 
     //Present on Window
     SDL_RenderPresent(Renderer);
