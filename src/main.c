@@ -26,7 +26,7 @@ Objects Limits[4] = { {.x = 160, .y = 80, .width = 840, .height = -20} ,
 int Stop_generating_Coins = FALSE;
 
 //extern Variables
-extern Coordinates Coord_Array[MAXIMUM_GENERATING_COINS];
+extern Coordinates* Coord_Array[MAXIMUM_GENERATING_COINS];
 extern int NumberOfCoinsSpawned;
 
 int  Init_Window(void)
@@ -155,8 +155,11 @@ void render()
     //Spawning random Coins
     for(int i = 0; i < NumberOfCoinsSpawned ; i++)
     {
+        if(Coord_Array[i] == NULL) break;
+
+
         SDL_SetRenderDrawColor(Renderer, 255 , 255 , 0 , 255 ); //yellow
-        DrawCoins(Renderer, *Coord_Array[i].coord_x, *Coord_Array[i].coord_y , COINS_RADIUS);
+        DrawCoins(Renderer, Coord_Array[i]->coord_x, Coord_Array[i]->coord_y , COINS_RADIUS);
     }
 
     //Present on Window

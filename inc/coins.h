@@ -13,8 +13,8 @@
 
 typedef struct 
 {
-    int* coord_x;
-    int* coord_y;
+    int coord_x;
+    int coord_y;
 
 }Coordinates;
 

@@ -1,7 +1,7 @@
 #include"coins.h"
 
-Coordinates Coord_Array[MAXIMUM_GENERATING_COINS];
-int NumberOfCoinsSpawned = 0;
+Coordinates* Coord_Array[MAXIMUM_GENERATING_COINS];
+int NumberOfCoinsSpawned = 1;
 //extern variables
 extern SDL_Renderer* Renderer;
 
@@ -9,8 +9,7 @@ void Initialize_Coord_array()
 {
     for(int i = 0; i < MAXIMUM_GENERATING_COINS ; i++)
     {
-        Coord_Array[i].coord_x = NULL;
-        Coord_Array[i].coord_y = NULL;
+        Coord_Array[i] = NULL;
     }
 }
 
@@ -36,14 +35,22 @@ int GenerateRandomNumbers(int Lower_Border, int Higher_Border)
 
 void GenerateRandomCoordinates(int Lower_Border_X, int Higher_Border_X, int Lower_Border_Y, int Higher_Border_Y)
 {
+    if(NumberOfCoinsSpawned == MAXIMUM_GENERATING_COINS) return ; //do not generate  new coordinates
+
+
     //coordinates at fixed memory location 
-    if(NumberOfCoinsSpawned == 10) return ; //do not generate  new coordinates
-
-    Coord_Array[NumberOfCoinsSpawned].coord_x = (int*)malloc(sizeof(int));
-    *Coord_Array[NumberOfCoinsSpawned].coord_x = GenerateRandomNumbers(Lower_Border_X, Higher_Border_X);
-
-    Coord_Array[NumberOfCoinsSpawned].coord_y = (int*)malloc(sizeof(int));
-    *Coord_Array[NumberOfCoinsSpawned].coord_y = GenerateRandomNumbers(Lower_Border_Y, Higher_Border_Y);
+    for(int i = 0; i < NumberOfCoinsSpawned; i++ )
+    {
+        if(Coord_Array[i] == NULL)
+        {
+            Coord_Array[i] = (Coordinates*)malloc(sizeof(Coordinates));
+            
+            Coord_Array[i]->coord_x = GenerateRandomNumbers(Lower_Border_X, Higher_Border_X);
+            Coord_Array[i]->coord_y = GenerateRandomNumbers(Lower_Border_Y, Higher_Border_Y);
     
-    NumberOfCoinsSpawned++;
+            NumberOfCoinsSpawned++;
+            return;
+
+        }
+    }
 }
