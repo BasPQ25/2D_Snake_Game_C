@@ -2,6 +2,7 @@
 #include<SDL2/SDL.h>
 #include"constants.h"
 #include"coins.h"
+#include"snake.h"
 #include<time.h>
 
 int game_is_running = FALSE;
@@ -28,6 +29,7 @@ int Stop_generating_Coins = FALSE;
 //extern Variables
 extern Coordinates* Coord_Array[MAXIMUM_GENERATING_COINS];
 extern int NumberOfCoinsSpawned;
+extern Coordinates Snake_body[MAXIMUM_GENERATING_COINS];
 
 int  Init_Window(void)
 {
@@ -105,6 +107,7 @@ void process_input()
 }
 void update()
 {
+    //Moving direction and Snake Speeds
     static int last_frame_time = 0;
 
     float delta_time = ( SDL_GetTicks() - last_frame_time) / 1000.0f;
@@ -113,10 +116,13 @@ void update()
 
     Snake.x += move_x * SNAKE_SPEED * delta_time; //80 pixels/sec
     Snake.y += move_y * SNAKE_SPEED * delta_time;
+    
+    Update_Snake_Head_Pozition(Snake.x, Snake.y);
 
 }
 void setup()
 {   
+    //Snake Initial Coordinates and size
     Snake.x = 400;
     Snake.y = 400;
     Snake.width = 20;
@@ -137,7 +143,7 @@ void render()
         SDL_RenderFillRect(Renderer, &Limits_Rect);
    }
 
-    //Drawing Snake
+    //Drawing Snake head
     SDL_Rect Snake_Body ={ Snake.x , Snake.y , Snake.width , Snake.height };
     SDL_SetRenderDrawColor(Renderer, 255 , 255 , 255 , 255 ); //white
     SDL_RenderFillRect( Renderer , &Snake_Body);
@@ -151,16 +157,19 @@ void render()
 
         last_frame_time_coins = SDL_GetTicks();
     }
-
+    
     //Spawning random Coins
-    for(int i = 0; i < NumberOfCoinsSpawned ; i++)
+    for(int i = 0; i < MAXIMUM_GENERATING_COINS ; i++)
     {
-        if(Coord_Array[i] == NULL) break;
-
+        if(Coord_Array[i] == NULL) continue;
 
         SDL_SetRenderDrawColor(Renderer, 255 , 255 , 0 , 255 ); //yellow
         DrawCoins(Renderer, Coord_Array[i]->coord_x, Coord_Array[i]->coord_y , COINS_RADIUS);
     }
+
+    //Game Logic
+    
+    Eat_Coins_And_Grow_Tail(Snake_Body);
 
     //Present on Window
     SDL_RenderPresent(Renderer);
@@ -174,6 +183,7 @@ int main()
     //initialize start timer for random numbers generations
     srand(time(NULL));
 
+    //if TRUE game is running, if false game is ending
     game_is_running = Init_Window();
 
     setup();

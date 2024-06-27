@@ -38,19 +38,15 @@ void GenerateRandomCoordinates(int Lower_Border_X, int Higher_Border_X, int Lowe
     if(NumberOfCoinsSpawned == MAXIMUM_GENERATING_COINS) return ; //do not generate  new coordinates
 
 
-    //coordinates at fixed memory location 
-    for(int i = 0; i < NumberOfCoinsSpawned; i++ )
-    {
-        if(Coord_Array[i] == NULL)
-        {
-            Coord_Array[i] = (Coordinates*)malloc(sizeof(Coordinates));
-            
-            Coord_Array[i]->coord_x = GenerateRandomNumbers(Lower_Border_X, Higher_Border_X);
-            Coord_Array[i]->coord_y = GenerateRandomNumbers(Lower_Border_Y, Higher_Border_Y);
-    
-            NumberOfCoinsSpawned++;
-            return;
+    //coordinates at fixed memory location
+    int i = 0; 
+    while(Coord_Array[i] !=NULL) i++;
 
-        }
-    }
+    Coord_Array[i] = (Coordinates*)malloc(sizeof(Coordinates));
+            
+    Coord_Array[i]->coord_x = GenerateRandomNumbers(Lower_Border_X, Higher_Border_X);
+    Coord_Array[i]->coord_y = GenerateRandomNumbers(Lower_Border_Y, Higher_Border_Y);
+    
+    NumberOfCoinsSpawned++;
 }
+
