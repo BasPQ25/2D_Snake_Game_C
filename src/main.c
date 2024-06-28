@@ -1,14 +1,10 @@
-#include<stdio.h>
-#include<SDL2/SDL.h>
-#include"constants.h"
-#include"coins.h"
-#include"snake.h"
-#include<time.h>
+#include"main.h"
 
 int game_is_running = FALSE;
 
 SDL_Window* Window = NULL;
 SDL_Renderer* Renderer = NULL;
+
 
 
 //local variables
@@ -32,6 +28,11 @@ extern int NumberOfCoinsSpawned;
 extern Coordinates Snake_body[MAXIMUM_GENERATING_COINS];
 extern int NumberOfTails;
 
+extern TextParameters* p_Text_Score;
+//extern TextParameters* p_Text_Points;
+
+char Points_Text[100] = {"Score:\n"};
+
 int  Init_Window(void)
 {
     if( SDL_Init(SDL_INIT_EVERYTHING) != 0)
@@ -53,6 +54,16 @@ int  Init_Window(void)
         fprintf(stderr,"Couldn't initialize Renderer");
         return FALSE;
     }
+
+    TTF_Init();
+
+    sprintf(Points_Text, "Score:\n  \t%d", NumberOfTails);
+
+    if(!Initialize_Text_Configuration(p_Text_Score, TEXT_SIZE_SCORE , Points_Text) )
+        return FALSE;
+
+    
+
 
     return TRUE;
 
@@ -184,6 +195,22 @@ void render()
     //Game Logic
     
     Eat_Coins(Snake_Body);
+
+    //Create Score static text
+
+
+    //Points Counter when eating coins
+    
+    static int PointsSwitchChecker = 0;
+
+    if(PointsSwitchChecker < NumberOfTails)
+    {
+        sprintf(Points_Text, "Score:\n \t%d", NumberOfTails);
+        Initialize_Text_Configuration(p_Text_Score,TEXT_SIZE_SCORE,Points_Text);
+        PointsSwitchChecker++;
+    }
+
+    SDL_RenderCopy(Renderer, p_Text_Score->Texture , NULL, &(SDL_Rect){1110,100,p_Text_Score->Surface->w,p_Text_Score->Surface->h});
 
     //Present on Window
     SDL_RenderPresent(Renderer);
