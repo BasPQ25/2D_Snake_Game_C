@@ -6,7 +6,6 @@ SDL_Window* Window = NULL;
 SDL_Renderer* Renderer = NULL;
 
 
-
 //local variables
 float last_frame_time_coins = 0;
 
@@ -28,8 +27,9 @@ extern int NumberOfCoinsSpawned;
 extern Coordinates Snake_body[MAXIMUM_GENERATING_COINS];
 extern int NumberOfTails;
 
-extern TextParameters* p_Text_Score;
-//extern TextParameters* p_Text_Points;
+extern TextParameters* p_Text;
+
+extern int Game_Lost;
 
 char Points_Text[100] = {"Score:\n"};
 
@@ -55,18 +55,25 @@ int  Init_Window(void)
         return FALSE;
     }
 
+
     TTF_Init();
 
     sprintf(Points_Text, "Score:\n  \t%d", NumberOfTails);
 
-    if(!Initialize_Text_Configuration(p_Text_Score, TEXT_SIZE_SCORE , Points_Text) )
+    if(!Initialize_Text_Configuration(p_Text, TEXT_SIZE_SCORE , Points_Text) )
         return FALSE;
-
-    
-
 
     return TRUE;
 
+}
+void setup()
+{   
+    //Snake Initial Coordinates and size
+    Snake.x = 400;
+    Snake.y = 400;
+    Snake.width = 20;
+    Snake.height = 20;
+    
 }
 void destroy_window(void)
 {
@@ -89,29 +96,54 @@ void process_input()
             switch(event.key.keysym.sym)
             {
                 case SDLK_ESCAPE:
+                    destroy_window();
                     game_is_running = FALSE;
+                    
                     break;
 
                 case SDLK_UP:
-                    move_y = -1;
-                    move_x = 0;
+                    if(move_y != DOWN)
+                    {
+                        move_y = UP;
+                        move_x = 0;
+                    }
                     break;
                 
                 case SDLK_DOWN:
-                    move_y = 1;
-                    move_x = 0;
+                   if(move_y != UP)
+                   {
+                        move_y = DOWN;
+                        move_x = 0;
+                   }
                     break;
                 
                 case SDLK_RIGHT:
-                    move_x = 1;
-                    move_y = 0;
+                    if(move_x != LEFT)
+                    {
+                        move_x = RIGHT;
+                        move_y = 0;
+                    }
                     break;
                 
                 case SDLK_LEFT:
-                    move_x = -1;
-                    move_y = 0;
+                    if(move_x != RIGHT)
+                    {
+                        move_x = LEFT;
+                        move_y = 0;
+                    }
                     break;
+                //Enter key
+                case SDLK_RETURN:
+                    //Reset states to Initial
+                    setup();
+                    move_x = 0;
+                    move_y = 0;
+                    Game_Lost = FALSE;
+                    NumberOfTails = 0;
 
+                    //initial score 
+                    sprintf(Points_Text, "Score:\n \t%d", NumberOfTails);
+                    Initialize_Text_Configuration(p_Text,TEXT_SIZE_SCORE,Points_Text);
                 default:
                     
             }
@@ -133,17 +165,11 @@ void update()
         Snake.y += move_y * SNAKE_DISTANGE_TRAVELED;
     
         Update_Snake_Head_Pozition(Snake.x, Snake.y);
+
+        //If the snake crashes with the wall the game is lost        
+        Check_If_Game_Lost(Snake.x,Snake.y,Snake_body);
     }
 
-}
-void setup()
-{   
-    //Snake Initial Coordinates and size
-    Snake.x = 400;
-    Snake.y = 400;
-    Snake.width = 20;
-    Snake.height = 20;
-    
 }
 void render()
 {
@@ -152,6 +178,8 @@ void render()
     SDL_RenderClear(Renderer);
 
     //Drawing Limits
+    if(!Game_Lost)
+    {
     for(int i = 0; i < 4; i++)
    {
         SDL_Rect Limits_Rect = {Limits[i].x, Limits[i].y, Limits[i].width, Limits[i].height};
@@ -193,51 +221,50 @@ void render()
     }
 
     //Game Logic
-    
     Eat_Coins(Snake_Body);
 
-    //Create Score static text
-
-
-    //Points Counter when eating coins
-    
+    //Game Text For Score: Points 
     static int PointsSwitchChecker = 0;
 
     if(PointsSwitchChecker < NumberOfTails)
     {
         sprintf(Points_Text, "Score:\n \t%d", NumberOfTails);
-        Initialize_Text_Configuration(p_Text_Score,TEXT_SIZE_SCORE,Points_Text);
+        Initialize_Text_Configuration(p_Text,TEXT_SIZE_SCORE,Points_Text);
         PointsSwitchChecker++;
     }
 
-    SDL_RenderCopy(Renderer, p_Text_Score->Texture , NULL, &(SDL_Rect){1110,100,p_Text_Score->Surface->w,p_Text_Score->Surface->h});
-
+    SDL_RenderCopy(Renderer, p_Text->Texture , NULL, &(SDL_Rect){1110,100,p_Text->Surface->w,p_Text->Surface->h});
+    }
+    else
+    {
+        Pop_Screen_When_Lost();
+    }
     //Present on Window
     SDL_RenderPresent(Renderer);
 }
 
 int main()
 {
-    //initializa all the coins coordinates at 0;
-    void Initialize_Coord_array();
+        SDL_RenderClear(Renderer);
 
-    //initialize start timer for random numbers generations
-    srand(time(NULL));
+        //initializa all the coins coordinates at 0;
+        void Initialize_Coord_array();
 
-    //if TRUE game is running, if false game is ending
-    game_is_running = Init_Window();
+        //initialize start timer for random numbers generations
+        srand(time(NULL));
 
-    setup();
+        //if TRUE game is running, if false game is ending
+        game_is_running = Init_Window();
 
-    while(game_is_running)
-    {
-        process_input();
-        update();
-        render();
-    }
+        setup();
 
-    destroy_window();
-
+        //game running infinite loop
+        while(game_is_running)
+        {
+            process_input();
+            update();
+            render();
+        }
     return 0;
 
 }

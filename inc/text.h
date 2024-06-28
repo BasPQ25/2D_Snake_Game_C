@@ -3,7 +3,7 @@
 
 
 #define TEXT_SIZE_SCORE 120
-#define TEXT_SIZE_POINTS 60
+
 
 
 typedef struct TextParameters
