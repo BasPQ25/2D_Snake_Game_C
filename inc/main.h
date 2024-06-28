@@ -7,6 +7,7 @@
 #include"snake.h"
 #include"text.h"
 #include"lost.h"
+#include"drawing.h"
 
 #define FALSE 0
 #define TRUE 1
@@ -15,7 +16,7 @@
 #define LENGTH 1000
 
 #define SNAKE_DISTANGE_TRAVELED 20
-#define SNAKE_SPEED 30
+#define SNAKE_SPEED 40
 
 #define LOWER_BORDER_X 200
 #define HIGHER_BORDER_X 960

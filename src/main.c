@@ -180,60 +180,54 @@ void render()
     //Drawing Limits
     if(!Game_Lost)
     {
-    for(int i = 0; i < 4; i++)
-   {
-        SDL_Rect Limits_Rect = {Limits[i].x, Limits[i].y, Limits[i].width, Limits[i].height};
-        SDL_SetRenderDrawColor( Renderer, 255 , 0 , 0 , 255); //red
-        SDL_RenderFillRect(Renderer, &Limits_Rect);
-   }
+        for(int i = 0; i < 4; i++)
+        {
+            SDL_Rect Limits_Rect = {Limits[i].x, Limits[i].y, Limits[i].width, Limits[i].height};
+            SDL_SetRenderDrawColor( Renderer, 255 , 0 , 0 , 255); //red
+            SDL_RenderFillRect(Renderer, &Limits_Rect);
+        }
 
-    //Drawing Snake head
-    SDL_Rect Snake_Body ={ Snake.x , Snake.y , Snake.width , Snake.height };
-    SDL_SetRenderDrawColor(Renderer, 255 , 255 , 255 , 255 ); //white
-    SDL_RenderFillRect( Renderer , &Snake_Body);
+        //Drawing Snake head
+        SDL_Rect Snake_Body ={ Snake.x , Snake.y , Snake.width , Snake.height };
+        Draw_Snake_Head(Renderer,Snake_Body);
 
-    //Draw Snake Tails
-    SDL_Rect Snake_Tails ={ Snake.x , Snake.y , Snake.width , Snake.height};
-    for(int i = 0; i < NumberOfTails; i++)
-    {
-      Snake_Tails.x = Snake_body[i+1].coord_x;  
-      Snake_Tails.y = Snake_body[i+1].coord_y;
-      SDL_RenderFillRect( Renderer , &Snake_Tails);
-    }
+        //Draw Snake Tails
+        SDL_Rect Snake_Tails ={ Snake.x , Snake.y , Snake.width , Snake.height};
+        Drawing_Snake_Tail(Renderer, Snake_Tails, Snake_body);
 
-    //Generating Coins Coordinates;
-    float delta_time_coins = ( SDL_GetTicks() - last_frame_time_coins) / 1000.0f;
+        //Generating Coins Coordinates;
+        float delta_time_coins = ( SDL_GetTicks() - last_frame_time_coins) / 1000.0f;
 
-    if(delta_time_coins >= TIME_PASSED_TO_SPAWN_COIN) 
-    {
-        GenerateRandomCoordinates(LOWER_BORDER_X, HIGHER_BORDER_X , LOWER_BORDER_Y ,  HIGHER_BORDER_Y);
+        if(delta_time_coins >= TIME_PASSED_TO_SPAWN_COIN) 
+        {
+            GenerateRandomCoordinates(LOWER_BORDER_X, HIGHER_BORDER_X , LOWER_BORDER_Y ,  HIGHER_BORDER_Y);
 
-        last_frame_time_coins = SDL_GetTicks();
-    }
+            last_frame_time_coins = SDL_GetTicks();
+        }
     
-    //Spawning random Coins
-    for(int i = 0; i < MAXIMUM_GENERATING_COINS ; i++)
-    {
-        if(Coord_Array[i] == NULL) continue;
+        //Spawning random Coins
+        for(int i = 0; i < MAXIMUM_GENERATING_COINS ; i++)
+        {
+            if(Coord_Array[i] == NULL) continue;
 
-        SDL_SetRenderDrawColor(Renderer, 255 , 255 , 0 , 255 ); //yellow
-        DrawCoins(Renderer, Coord_Array[i]->coord_x, Coord_Array[i]->coord_y , COINS_RADIUS);
-    }
+            SDL_SetRenderDrawColor(Renderer, 255 , 255 , 0 , 255 ); //yellow
+            DrawCoins(Renderer, Coord_Array[i]->coord_x, Coord_Array[i]->coord_y , COINS_RADIUS);
+        }
 
-    //Game Logic
-    Eat_Coins(Snake_Body);
+        //Game Logic
+        Eat_Coins(Snake_Body);
 
-    //Game Text For Score: Points 
-    static int PointsSwitchChecker = 0;
+        //Game Text For Score: Points 
+        static int PointsSwitchChecker = 0;
 
-    if(PointsSwitchChecker < NumberOfTails)
-    {
-        sprintf(Points_Text, "Score:\n \t%d", NumberOfTails);
-        Initialize_Text_Configuration(p_Text,TEXT_SIZE_SCORE,Points_Text);
-        PointsSwitchChecker++;
-    }
+        if(PointsSwitchChecker < NumberOfTails)
+        {
+            sprintf(Points_Text, "Score:\n \t%d", NumberOfTails);
+            Initialize_Text_Configuration(p_Text,TEXT_SIZE_SCORE,Points_Text);
+            PointsSwitchChecker++;
+        }
 
-    SDL_RenderCopy(Renderer, p_Text->Texture , NULL, &(SDL_Rect){1110,100,p_Text->Surface->w,p_Text->Surface->h});
+        SDL_RenderCopy(Renderer, p_Text->Texture , NULL, &(SDL_Rect){1110,100,p_Text->Surface->w,p_Text->Surface->h});
     }
     else
     {
