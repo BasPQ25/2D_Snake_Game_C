@@ -1,9 +1,11 @@
 #include"main.h"
 
+
 extern int move_x;
 extern int move_y;
 
 extern int NumberOfTails;
+extern SDL_Renderer* Renderer;
 
 
 

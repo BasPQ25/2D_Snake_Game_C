@@ -1,6 +1,7 @@
 #include"main.h"
 
-
+int Only_once = 0;
+int Only_once_2 = 0;
 //extern variables
 extern SDL_Renderer* Renderer ;
 
@@ -34,10 +35,40 @@ void Check_If_Game_Lost(int Head_pozition_x , int Head_pozition_y , Coordinates 
 void Pop_Screen_When_Lost()
 {
     static char buffer[100];
+    
+    static int highScore = 0;
 
-    sprintf(buffer," GAME OVER\n  \tScore: %d\n",NumberOfTails);
-    Initialize_Text_Configuration(p_Text,TEXT_GAME_LOST_SIZE,buffer);
-    SDL_RenderCopy(Renderer, p_Text->Texture , NULL, &(SDL_Rect){400,200,p_Text->Surface->w,p_Text->Surface->h});
+    FILE * fileText = fopen("highScore.txt", "r");
+    if(!Only_once_2)
+    {
+        fscanf(fileText,"%d",&highScore);
+        Only_once_2 = 1;
+    }
 
+   if(highScore < NumberOfTails)
+    {
+        if(!Only_once)
+        {
+            fclose(fileText);
+
+            fileText = fopen("highScore.txt", "w");
+
+            fprintf(fileText, "%d", NumberOfTails);
+            
+            Only_once = 1;
+        }
+        sprintf(buffer, " Game Over\n New Best: %d\n", NumberOfTails);
+        Initialize_Text_Configuration(p_Text,TEXT_GAME_LOST_SIZE,buffer);
+        SDL_RenderCopy(Renderer, p_Text->Texture , NULL, &(SDL_Rect){400,200,p_Text->Surface->w,p_Text->Surface->h});
+    }
+    
+    else
+    {
+        sprintf(buffer, " Game Over\n \tScore: %d\n", NumberOfTails);
+        Initialize_Text_Configuration(p_Text,TEXT_GAME_LOST_SIZE,buffer);
+        SDL_RenderCopy(Renderer, p_Text->Texture , NULL, &(SDL_Rect){400,200,p_Text->Surface->w,p_Text->Surface->h});
+    }
+    
+    fclose(fileText);
 }
 

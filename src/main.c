@@ -30,8 +30,11 @@ extern int NumberOfTails;
 extern TextParameters* p_Text;
 
 extern int Game_Lost;
+extern int Only_once;
+extern int Only_once_2;
 
 char Points_Text[100] = {"Score:\n"};
+static int PointsSwitchChecker = 0;
 
 int  Init_Window(void)
 {
@@ -135,11 +138,15 @@ void process_input()
                 //Enter key
                 case SDLK_RETURN:
                     //Reset states to Initial
+                    
                     setup();
+                    Only_once = 0;
+                    Only_once_2 = 0;
                     move_x = 0;
                     move_y = 0;
                     Game_Lost = FALSE;
                     NumberOfTails = 0;
+                    PointsSwitchChecker = 0;
 
                     //initial score 
                     sprintf(Points_Text, "Score:\n \t%d", NumberOfTails);
@@ -174,7 +181,7 @@ void update()
 void render()
 {
     //Window Color
-    SDL_SetRenderDrawColor( Renderer, 0 , 0 , 0 , 255);
+    SDL_SetRenderDrawColor( Renderer, 0 , 100 , 0 , 255);
     SDL_RenderClear(Renderer);
 
     if(!Game_Lost)
@@ -184,12 +191,14 @@ void render()
         Drawing_grass(Renderer);
         
         //Drawing Limits
+        
         for(int i = 0; i < 4; i++)
         {
             SDL_Rect Limits_Rect = {Limits[i].x, Limits[i].y, Limits[i].width, Limits[i].height};
             SDL_SetRenderDrawColor( Renderer, 255 , 0 , 0 , 255); //red
             SDL_RenderFillRect(Renderer, &Limits_Rect);
         }
+        
 
         //Drawing Snake head
         SDL_Rect Snake_Body ={ Snake.x , Snake.y , Snake.width , Snake.height };
@@ -225,12 +234,11 @@ void render()
         //Game Logic
         Eat_Coins(Snake_Body);
 
-        //Game Text For Score: Points 
-        static int PointsSwitchChecker = 0;
+        //Game Text For Score: Points
 
         if(PointsSwitchChecker < NumberOfTails)
         {
-            sprintf(Points_Text, "Score:\n \t%d", NumberOfTails);
+            sprintf(Points_Text, "Score:\n \t %d", NumberOfTails);
             Initialize_Text_Configuration(p_Text,TEXT_SIZE_SCORE,Points_Text);
             PointsSwitchChecker++;
         }
@@ -241,6 +249,7 @@ void render()
     {
         SDL_RenderClear(Renderer);
         Pop_Screen_When_Lost();
+        
     }
     //Present on Window
     SDL_RenderPresent(Renderer);
