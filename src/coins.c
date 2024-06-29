@@ -14,15 +14,20 @@ void Initialize_Coord_array()
 }
 
 void DrawCoins(SDL_Renderer* renderer, int centerX, int centerY, int radius) {
-    for (int w = 0; w < radius * 2; w++) {
-        for (int h = 0; h < radius * 2; h++) {
+    for (int w = 0; w < radius * 2; w++) 
+    {
+        for (int h = 0; h < radius * 2; h++) 
+        {
             int dx = radius - w; // Horizontal offset
             int dy = radius - h; // Vertical offset
-            if ((dx * dx + dy * dy) <= (radius * radius)) {
+            if ((dx * dx + dy * dy) <= (radius * radius)) 
+            {
                 SDL_RenderDrawPoint(renderer, centerX + dx, centerY + dy);
             }
         }
     }
+
+    
 }
 
 int GenerateRandomNumbers(int Lower_Border, int Higher_Border)

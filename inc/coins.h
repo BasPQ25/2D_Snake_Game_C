@@ -2,7 +2,7 @@
 #include<time.h>
 #include<math.h>
 
-#define COINS_RADIUS 5
+#define COINS_RADIUS 10
 
 #define MAXIMUM_GENERATING_COINS 10
 

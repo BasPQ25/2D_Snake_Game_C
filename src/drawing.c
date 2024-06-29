@@ -58,7 +58,6 @@ void Draw_Snake_Head(SDL_Renderer* Renderer, SDL_Rect Snake_Body)
         DrawCoins(Renderer, Snake_Body.x + 20, Snake_Body.y + 18, 3);
     }
 }
-
 void Drawing_Snake_Tail(SDL_Renderer* Renderer, SDL_Rect Snake_Tails, Coordinates* Snake_body)
 {
    
@@ -91,4 +90,30 @@ void Drawing_Snake_Tail(SDL_Renderer* Renderer, SDL_Rect Snake_Tails, Coordinate
             SDL_SetRenderDrawColor(Renderer, 255 , 255 , 255 , 255 );
             SDL_RenderDrawLine(Renderer , Snake_Tails.x ,Snake_Tails.y ,Snake_Tails.x + Snake_Tails.w , Snake_Tails.y + Snake_Tails.h );
         }
+}
+void Drawing_grass(SDL_Renderer* Renderer)
+{
+    SDL_Rect Grass = {.x = 0, .y = 0 , .w = 40 , .h = 40};
+    int step = FALSE;
+    for(int i = 180; i <= 960; i+=40)
+        {
+            for(int j = 80; j < 900; j+=40)
+            {
+                Grass.x = i;
+                Grass.y = j;
+                if(step == FALSE)
+                {
+                    SDL_SetRenderDrawColor(Renderer, 0 , 170 , 0 , 0 ); // dark green
+                    SDL_RenderFillRect(Renderer,&Grass);
+                    step = TRUE;
+                }
+                else
+                {
+                    step = FALSE;
+                    SDL_SetRenderDrawColor(Renderer, 0 , 190 , 0 , 0 ); //light green
+                    SDL_RenderFillRect(Renderer,&Grass);
+                }
+            }
+        }
+
 }

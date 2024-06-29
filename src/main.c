@@ -16,8 +16,8 @@ int move_y = 0;
 Objects Snake;
 Objects Limits[4] = { {.x = 160, .y = 80, .width = 840, .height = -20} ,
                         {.x = 980, .y = 80, .width = 20, .height = 820} ,
-                        {.x = 980, .y = 880, .width = -820, .height = 20} ,
-                        {.x = 180, .y = 880, .width = -20, .height = -800} };
+                        {.x = 1000, .y = 900, .width = -840, .height = 20} ,
+                        {.x = 180, .y = 900, .width = -20, .height = -840} };
 //Flags for Switching the game state
 int Stop_generating_Coins = FALSE;
 
@@ -177,9 +177,13 @@ void render()
     SDL_SetRenderDrawColor( Renderer, 0 , 0 , 0 , 255);
     SDL_RenderClear(Renderer);
 
-    //Drawing Limits
     if(!Game_Lost)
     {
+
+        //Drawing grass
+        Drawing_grass(Renderer);
+        
+        //Drawing Limits
         for(int i = 0; i < 4; i++)
         {
             SDL_Rect Limits_Rect = {Limits[i].x, Limits[i].y, Limits[i].width, Limits[i].height};
@@ -210,8 +214,12 @@ void render()
         {
             if(Coord_Array[i] == NULL) continue;
 
-            SDL_SetRenderDrawColor(Renderer, 255 , 255 , 0 , 255 ); //yellow
+            SDL_SetRenderDrawColor(Renderer, 255 , 0 , 0 , 255 ); //yellow
             DrawCoins(Renderer, Coord_Array[i]->coord_x, Coord_Array[i]->coord_y , COINS_RADIUS);
+            
+            SDL_SetRenderDrawColor(Renderer, 0  , 0 , 0 , 255 ); 
+            SDL_RenderDrawLine( Renderer , Coord_Array[i]->coord_x , Coord_Array[i]->coord_y - 10 ,
+                                Coord_Array[i]->coord_x + 5  , Coord_Array[i]->coord_y - 15 );
         }
 
         //Game Logic
@@ -231,6 +239,7 @@ void render()
     }
     else
     {
+        SDL_RenderClear(Renderer);
         Pop_Screen_When_Lost();
     }
     //Present on Window
