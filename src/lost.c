@@ -57,7 +57,7 @@ void Pop_Screen_When_Lost()
             
             Only_once = 1;
         }
-        sprintf(buffer, " Game Over\n New Best: %d\n", NumberOfTails);
+        sprintf(buffer, " Game Over\nNew Best: %d\n", NumberOfTails);
         Initialize_Text_Configuration(p_Text,TEXT_GAME_LOST_SIZE,buffer);
         SDL_RenderCopy(Renderer, p_Text->Texture , NULL, &(SDL_Rect){400,200,p_Text->Surface->w,p_Text->Surface->h});
     }

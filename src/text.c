@@ -12,7 +12,7 @@ extern SDL_Renderer* Renderer;
 
 int  Initialize_Text_Configuration(TextParameters* p_Text, int Text_Size,char text_to_print[])
 {
-    p_Text->Font = TTF_OpenFont("/home/paul/Snake_Game_2D_C/Fonts/OpenSans-BoldItalic.ttf", Text_Size);
+    p_Text->Font = TTF_OpenFont("Fonts/OpenSans-BoldItalic.ttf", Text_Size);
     if(p_Text->Font == NULL)
     {
         fprintf(stderr,"Couldn't initialize Font\n");
