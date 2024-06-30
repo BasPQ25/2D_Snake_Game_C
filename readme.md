@@ -9,7 +9,10 @@
 
 
 
-https://github.com/BasPQ25/2D_Snake_Game_C/assets/133133680/58ccbb68-c298-41a9-a84b-275c0ef12e10
+
+https://github.com/BasPQ25/2D_Snake_Game_C/assets/133133680/26de0222-bc5c-4387-8dbf-628d8e02c06f
+
+
 
 
         
