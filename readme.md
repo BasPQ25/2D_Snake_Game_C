@@ -2,7 +2,7 @@
 
 ## If you want to install the game you have to follow these steps:
 
-### Download SDl2 and SDL2.ttf library.
+### Download SDl2 and SDL2_ttf library.
 ### Download gcc.
 ### Start using game.exe, or if it does not work, type make run in the terminal.
 
